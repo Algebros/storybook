@@ -1,0 +1,107 @@
+// Base
+
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+@mixin flex($justify: false, $align: false, $direction: false, $wrap: false) {
+  display: flex;
+
+  @if $justify { justify-content: $justify; }
+  @if $align { align-items: $align; }
+  @if $direction { flex-direction: $direction; }
+  @if $wrap { flex-wrap: $wrap; }
+}
+
+@mixin position($position, $args) {
+  @each $o in top right bottom left {
+    $i: index($args, $o);
+
+    @if $i and $i + 1<= length($args) and type-of(nth($args, $i + 1)) == number  {
+      #{$o}: nth($args, $i + 1);
+    }
+  }
+
+  position: $position;
+}
+
+@mixin absolute($args) {
+  @include position(absolute, $args);
+}
+
+@mixin fixed($args) {
+  @include position(fixed, $args);
+}
+
+@mixin relative($args) {
+  @include position(relative, $args);
+}
+
+@mixin font($size: false, $color: false, $weight: false,  $line: false, $font: false) {
+  @if $font { font-family: $font, Helvetica, sans-serif; }
+  @if $size { font-size: $size; }
+  @if $color { color: $color; }
+  @if $weight { font-weight: $weight; }
+  @if $line { line-height: $line; }
+}
+
+@mixin box-shadow($top, $left, $blur, $spread, $color, $inset: false) {
+  @if $inset {
+    -webkit-box-shadow:inset $top $left $blur $spread $color;
+    -moz-box-shadow:inset $top $left $blur $spread $color;
+    box-shadow:inset $top $left $blur $spread $color;
+  } @else {
+    -webkit-box-shadow: $top $left $blur $spread $color;
+    -moz-box-shadow: $top $left $blur $spread $color;
+    box-shadow: $top $left $blur $spread $color;
+  }
+}
+
+// Custom
+
+@mixin borderInsetHover($spread, $color: black) {
+  @include box-shadow(0, 0, 0, $spread, $color, true);
+}
+
+@mixin underline($color) {
+  @include absolute(0 0 0 0);
+
+  margin: 0 auto;
+
+  background-color: $color;
+}
+
+@mixin mainContainer {
+  height: calc(100vh - 155px);
+  @media screen and (max-width: $lg) {
+    height: calc(100vh - 110px);
+  }
+  @media screen and (max-width: $md) {
+    height: calc(100vh - 95px);
+  }
+}
+
+// parent block must have position: relative
+
+@mixin pseudo-line($width: 4px) {
+  @include size($width, 100%);
+  @include absolute(top 0 left -75px);
+
+  background: black;
+  content: '';
+
+  @media screen and (max-width: $xl) {
+    visibility: hidden;
+  }
+}
+
+@mixin pseudo-quote {
+  content: '';
+  @include size(30px);
+  position: absolute;
+  left: -15px;
+  top: -20px;
+  background-image: url(./../../../../assets/icons/logo.svg);
+  background-size: cover;
+}
